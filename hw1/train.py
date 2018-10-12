@@ -31,7 +31,7 @@ table4.index = (table4.index - 12) // 18
 table5 = table5.drop([i for i in table5.index if (i-10)%18 != 0])
 table5 = table5.drop(columns = table5.columns[0:3])
 table5.index = (table5.index - 10) // 18
-#print(table5)
+
 
 np1 = np.array(table)
 np1 = np1.reshape(5760)
@@ -74,10 +74,6 @@ for j in range(2, 13):
 np5 = np.asfarray(t, float)
 
 
-print(2.5*np.std(np2)+np.mean(np2))
-print(2.5*np.std(np1) + np.mean(np1))
-print(2.5*np.std(np3) + np.mean(np3))
-print(2.5*np.std(np4) + np.mean(np4))
 mustdelete = []
 for i in range(5652):
     if np.max(np2[i]) >= 150 or np.min(np2[i]) < 0:
@@ -92,13 +88,13 @@ for i in range(5652):
         if np3[i][j] < 0 or np4[i][j] < 0:
             mustdelete.append(i)
             break
-#print(np2)
+
 np2 = np.delete(np2, mustdelete, axis=0)
 np1 = np.delete(np1, mustdelete, axis=0)
 np3 = np.delete(np3, mustdelete, axis=0)
 np4 = np.delete(np4, mustdelete, axis=0)
 np5 = np.delete(np5, mustdelete, axis=0)
-print(np2.shape)
+
 for i in range(5286):
     for j in range(10):
         if np1[i][j] == 0:
@@ -108,21 +104,7 @@ for i in range(5286):
                 np1[i][j] = (np1[i][0]+np1[i][2])/2
             else:
                 np1[i][j] = (np1[i][j-1]+np1[i][j-2])/2
-"""for i in range(5286):
-    for j in range(10):
-        if np2[i][j] == 0 and np3[i][j] == 0 and np4[i][j] == 0:
-            if j == 0:
-                np2[i][j] = (np2[i-1][9]+np2[i-1][8])/2
-                np3[i][j] = (np3[i-1][9]+np3[i-1][8])/2
-                np4[i][j] = (np4[i-1][9]+np4[i-1][8])/2
-            elif j == 1:
-                np2[i][j] = (np2[i][j-1]+np2[i-1][9])/2
-                np3[i][j] = (np3[i][j-1]+np3[i-1][9])/2
-                np4[i][j] = (np4[i][j-1]+np4[i-1][9])/2
-            else:
-                np2[i][j] = (np2[i][j-1]+np2[i][j-2])/2
-                np3[i][j] = (np3[i][j-1]+np3[i][j-2])/2
-                np4[i][j] = (np4[i][j-1]+np4[i][j-2])/2 """
+
 
 
 
@@ -135,7 +117,7 @@ so2 = np4[:, 0:9]
 rf = np5[:, 0:9]
 pm25_2 = np.power(pm25, 2)
 pm10_2 = np.power(pm10, 2)
-print(pm25_2)
+
 pm25_3 = np.power(pm25, 3)
 pm25_4 = np.power(pm25, 4)
 max10 = np.amax(pm10)
@@ -158,7 +140,7 @@ maxrf = np.amax(rf)
 minrf = np.amin(rf)
 normal = np.array([max10, min10, max25, min25, maxco, minco, max25_2, min25_2, max10_2, min10_2, maxso2, minso2, maxrf, minrf])
 np.save(sys.argv[3], normal)
-"""
+
 pm10 = (pm10 - min10)/(max10 - min10)
 pm25 = (pm25 - min25)/(max25 - min25)
 co = (co - minco)/(maxco - minco)
@@ -168,7 +150,7 @@ pm10_2 = (pm10_2 - min10_2)/(max10_2 - min10_2)
 so2 = (so2 - minso2)/(maxso2 - minso2)
 pm25_4 = (pm25_4 - min25_4)/(max25_4-min25_4)
 pm25_3 = (pm25_3-min25_3)/(max25_3 - min25_3)
-#rf = (rf - minrf)/(maxrf - minrf)"""
+#rf = (rf - minrf)/(maxrf - minrf)
 temp = np.ones([5286, 1])
 
 traingdata = np.concatenate((temp, pm25_2, pm25, pm10, co, so2, rf), axis = 1)
@@ -197,14 +179,13 @@ while loss - llast <= 0:
     gradient = 2*np.dot(np.dot(traingdata.transpose(), traingdata), weight) - 2*np.dot(ydata.transpose(), traingdata) - 2*0.01*weight
     gradientsum = np.dot(gradient, gradient.transpose())
     ada += gradientsum
-    #print("fuck")
+    
     lr = 10000/m.sqrt(ada)
     weight = np.subtract(weight, lr*gradient)
     ll = np.dot(weight, xval.transpose()) - yval
     loss = np.dot(ll, ll.transpose())
-    #print(loss, llast)
+    
     count += 1
     print(m.sqrt(loss/1100), gradientsum, itera)
-print(weight)
 ffname = sys.argv[2]
 np.save(ffname, weight)
