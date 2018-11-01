@@ -1,1 +1,1 @@
-python3 test.py $1 normal.npy weight.npy $2
+python3 test.py $3 normal.npy weight.npy $4
